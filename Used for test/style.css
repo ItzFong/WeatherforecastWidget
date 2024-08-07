@@ -19,37 +19,28 @@ h1 {
     font-size: 12px;
 }
 
-
 .weather-widget {
     background-color: #192134;
     border-radius: 10px;
     width: 640px;
     display: flex;
-    justify-content: space-around; /* Center the days */
+    justify-content: space-around;
     padding: 20px;
-    flex-wrap: wrap;
-    gap: 10px; /* Add some gap between the days */
+    flex-wrap: nowrap; /* Ensure no wrapping */
     text-align: left;
-    /* margin-left: -10px; */
 }
 
 .day {
-    
     width: 120px;
     text-align: center;
-   
+    border-right: 1px solid #fff; /* Add this line */
+    padding-right: 10px; /* Optional: add some padding for better spacing */
 }
-#day1{
-    margin-left: -20px;
+
+.weather-widget .day:last-child {
+    border-right: none; /* Remove border for the last item */
 }
-/* p #date1{
-    margin-top: 100px;
-} */
-/* h2 {
-    font-size: 15x;
-    margin-bottom: 0px;
-    margin-top: 0px;
-} */ 
+
 .icon-date {
     display: flex;
     align-items: center;
@@ -58,10 +49,11 @@ h1 {
     margin-top: -20px;
     margin-left: -20px;
 }
+
 .icon {
     width: 30%;
     height: 30%;
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: -10px;
@@ -74,6 +66,7 @@ h1 {
     font-size: 8px;
     color: azure;
 }
+
 .title {
     font-weight: bold;
 }

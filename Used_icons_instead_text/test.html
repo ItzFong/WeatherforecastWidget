@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Fetch Example</title>
+</head>
+<body>
+    <h1>Fetch Tuya API</h1>
+    <button id="fetchButton">Fetch Token</button>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('fetchButton').addEventListener('click', fetchToken);
+
+        function fetchToken() {
+            const clientId = "your_client_id"; // replace with your actual client_id
+            const easy_sign = "your_easy_sign"; // replace with your actual sign
+            const t = Date.now();
+            const signMethod = "HMAC-SHA256";
+            const headers = {
+                "client_id": clientId,
+                "sign": easy_sign,
+                "t": t,
+                "sign_method": signMethod
+            };
+
+            // Use a different CORS proxy
+            const proxyUrl = 'https://api.allorigins.win/get?url=';
+            const targetUrl = encodeURIComponent("https://openapi.tuyaus.com/v1.0/token?grant_type=1");
+            const url = proxyUrl + targetUrl;
+
+            console.log(easy_sign);
+            console.log(url)
+
+            fetch(url, {
+                method: "GET"
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                const apiResponse = JSON.parse(data.contents);
+                document.getElementById('result').textContent = JSON.stringify(apiResponse, null, 2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').textContent = 'Error: ' + error;
+            });
+        }
+    </script>
+</body>
+</html>

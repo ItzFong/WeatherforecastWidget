@@ -3,25 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Fetch Example</title>
+    <title>Fetch Tuya API</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
-</head>
-<body>
-    <h1>Fetch Tuya API</h1>
-    <button id="fetchButton">Fetch Token</button>
-    <pre id="result"></pre>
-
     <script>
-        document.getElementById('fetchButton').addEventListener('click', fetchToken);
-
-        function calcSign(client_id, timestamp, signStr, secret) {
-            var str = client_id + timestamp + signStr;
-            var hash = CryptoJS.HmacSHA256(str, secret);
-            var hashInBase64 = hash.toString(CryptoJS.enc.Base64);
-            var signUp = hashInBase64.toUpperCase();
-            return signUp;
-        }
-
         function stringToSign(query, mode, method, secret, request) {
             var sha256 = "";
             var url = "";
@@ -70,21 +54,49 @@
                 });
             }
 
+            url = replacePostmanUrl(url);
             map["signUrl"] = method + "\n" + sha256 + "\n" + headersStr + "\n" + url;
+            map["url"] = url;
 
             return map;
         }
+        function calcSign(client_id, timestamp, signStr, secret) {
+                var str = client_id + timestamp + signStr;
+                var hash = CryptoJS.HmacSHA256(str, secret);
+                var hashInBase64 = hash.toString(CryptoJS.enc.Base64);
+                var signUp = hashInBase64.toUpperCase();
+                return signUp;
+        }
+        function toJsonObj(query, arr, map) {
+            // Add your implementation for toJsonObj
+        }
 
-        async function fetchToken() {
-            const clientId = "q9upn8arstdq4j39x7ed";
+        function replacePostmanParams(body) {
+            // Add your implementation for replacePostmanParams
+        }
+
+        function replacePostmanUrl(url) {
+            url = "/v1.0/token?grant_type=1";
+            return url;
+        }
+    </script>
+</head>
+<body>
+    <h1>Fetch Tuya API</h1>
+    <button id="fetchButton">Fetch Token</button>
+    <pre id="result"></pre>
+    <script>
+        document.getElementById('fetchButton').addEventListener('click', fetchData);
+        async function fetchData() {
+            var clientId = "q9upn8arstdq4j39x7ed";
             var secretKey = '394a542c20624ba38c8646c591bbb1a6';
-            var query = "";
-            var mode = "";
             const t = Date.now().toString();
             var method = "GET";
+            var query = "";
+            var mode = "";
             var request = {
                 headers: new Map([
-                    ["client_id", "q9upn8arstdq4j39x7ed"],
+                    ["client_id", clientId],
                     ["sign", ""],
                     ["t", t],
                     ["sign_method", "HMAC-SHA256"]
@@ -94,41 +106,42 @@
                     path: ["https://openapi.tuyaus.com", "/v1.0/token?grant_type=1"]
                 }
             };
-            
             var result = stringToSign(query, mode, method, secretKey, request);
             var signStr = result["signUrl"];
             var easy_sign = calcSign(clientId, t, signStr, secretKey);
+
             const signMethod = "HMAC-SHA256";
+            const headers = {
+                "client_id": clientId,
+                "sign": easy_sign,
+                "t": t,
+                "sign_method": signMethod
+            };
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            const targetUrl = "https://openapi.tuyaus.com/v1.0/token?grant_type=1";
+            const url = proxyUrl + targetUrl;
 
-            // Include the headers as query parameters in the URL
-            const targetUrl = `https://openapi.tuyaus.com/v1.0/token?grant_type=1&client_id=${clientId}&sign=${easy_sign}&t=${t}&sign_method=${signMethod}`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-
-            console.log(easy_sign);
-
-            try {
-                const response = await fetch(proxyUrl, {
-                    method: "GET"
-                });
+            fetch(url, {
+                method: "GET",
+                headers: headers
+            })
+            .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok ' + response.statusText);
                 }
-                const data = await response.json();
-                const apiResponse = JSON.parse(data.contents);
-                document.getElementById('result').textContent = JSON.stringify(apiResponse, null, 2);
-            } catch (error) {
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('result').textContent = 'Error: ' + error;
-            }
+            });
         }
-
-        function toJsonObj(query, arr, map) {
-            // Add your implementation for toJsonObj
-        }
-
-        function replacePostmanParams(body) {
-            // Add your implementation for replacePostmanParams
-        }
+        
+        setInterval(fetchData, 10000);
     </script>
 </body>
 </html>
