@@ -8,10 +8,10 @@ self.onInit = (function() {
     // Function to format the date
     function formatDate(dateStr) {
         const date = new Date(dateStr);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
+        const day = date.getDate();
+        const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const month = monthNames[date.getMonth()];
+        return `${month} ${day}`;
     }
   
     // Function to print data to console
@@ -89,24 +89,11 @@ self.onInit = (function() {
         return weatherImages[code] || 'https://img.icons8.com/?size=100&id=wwWkoh82H4QD&format=png&color=000000';  // Default image
     }
   
-    function getWeatherData() {
-        console.log("Fetching weather data...");
-        return fetch(`${API_URL}?latitude=${LATITUDE}&longitude=${LONGITUDE}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max,weathercode&timezone=auto`)
-            .then(response => {
-                console.log("Response received", response);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("Data fetched:", data);
-                printDataToConsole(data);  // Print data to console
-                return data;
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
+    async function getWeatherData() {
+        const response = await fetch(`${API_URL}?latitude=${LATITUDE}&longitude=${LONGITUDE}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max,weathercode&timezone=auto`);
+        const data = await response.json();
+        printDataToConsole(data);  // Print data to console
+        return data;
     }
   
     function updateWeatherUI(data) {
@@ -115,11 +102,11 @@ self.onInit = (function() {
             console.error('Invalid weather data:', data);
             return;
         }
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             const dayData = data.daily.time[i];
             const weatherCode = data.daily.weathercode[i];
             document.getElementById(`date${i+1}`).innerText = formatDate(dayData);
-            document.getElementById(`description${i+1}`).innerText = getWeatherDescription(weatherCode);
+            // document.getElementById(`description${i+1}`).innerText = getWeatherDescription(weatherCode);
             document.getElementById(`temperature${i+1}`).innerText = `${data.daily.temperature_2m_max[i]}°C`;
             document.getElementById(`humidity${i+1}`).innerText = `${data.daily.precipitation_sum[i]}%`;
             document.getElementById(`windspeed${i+1}`).innerText = `${data.daily.windspeed_10m_max[i]} km/h`;
@@ -128,7 +115,7 @@ self.onInit = (function() {
             const iconElement = document.getElementById(`icon${i+1}`);
             const imageUrl = getWeatherImageUrl(weatherCode);
             console.log(`Setting image for day ${i+1} to ${imageUrl}`);
-            iconElement.innerHTML = `<img src="${imageUrl}" alt="Weather icon" style="width: 100px; height: 100px;">`;
+            iconElement.innerHTML = `<img src="${imageUrl}" alt="Weather icon" style="width: 25px; height: 25px;">`;
         }
     }
   
