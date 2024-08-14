@@ -9,7 +9,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>HO CHI MINH CITY</h1>
+        <div class="city">
+            <input type="text" id="cityInput" placeholder="Enter city name">
+            <button onclick="fetchWeather()">Get Weather</button>
+            <div id="weatherResult"></div>
+        </div>
         <div class="weather-widget">
             <div class="day" id="day1">
                 <div class="icon" id="icon1"></div> 

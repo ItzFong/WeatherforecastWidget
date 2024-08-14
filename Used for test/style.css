@@ -1,7 +1,7 @@
 body {
     background-color: #aee1f4;
     font-family: Arial, sans-serif;
-    width: 100%;
+    width: 40px;
     margin: 0;
     padding: 0;
 }
@@ -14,7 +14,7 @@ body {
 
 h1 {
     margin-top: 0px;
-    width: 550px;
+    width: 600px;
     margin-bottom: 0px;
     font-size: 12px;
 }
@@ -23,6 +23,7 @@ h1 {
     background-color: #192134;
     border-radius: 10px;
     width: 640px;
+    height: auto; /* Adjusted height to auto */
     display: flex;
     justify-content: space-around;
     padding: 20px;
@@ -31,10 +32,12 @@ h1 {
 }
 
 .day {
-    width: 120px;
+    width: 90px;
+    height: 30px;
     text-align: center;
     border-right: 1px solid #fff; /* Add this line */
     padding-right: 10px; /* Optional: add some padding for better spacing */
+    margin-top: 5px; /* Adjust margin to lower the days */
 }
 
 .weather-widget .day:last-child {
@@ -46,7 +49,7 @@ h1 {
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
-    margin-top: -20px;
+    margin-top: -10px; /* Adjust margin to align properly */
     margin-left: -20px;
 }
 
@@ -57,7 +60,7 @@ h1 {
     justify-content: center;
     align-items: center;
     margin-bottom: -10px;
-    margin-top: -20px;
+    margin-top: -10px; /* Adjust margin to align properly */
     margin-left: 5px;
 }
 

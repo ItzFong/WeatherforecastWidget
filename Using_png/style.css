@@ -5,6 +5,35 @@ body {
     margin: 0;
     padding: 0;
 }
+.city {
+    display: flex;       /* Aligns children (input and button) inline */
+    align-items: center; /* Centers items vertically */
+    gap: 5px;           /* Adds space between the input and the button */
+}
+
+/* Optional: Style the input and button for better appearance */
+input[type="text"] {
+    flex-grow: 1; /* Allows the input to take up available space */
+    padding: 2px;
+    border: 2px solid #ccc;
+    border-radius: 2px;
+}
+
+button {
+    width: 150px;
+    padding: 2px 2px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: xx-small;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
 
 .container {
     text-align: center;
